@@ -1,0 +1,67 @@
+#include <stdio.h>
+
+struct Process
+{
+    int pid;
+    int burstTime;
+    int deadline;
+};
+
+int main()
+{
+    int n;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    struct Process p[n];
+
+    for (int i = 0; i < n; i++)
+    {
+        p[i].pid = i + 1;
+
+        printf("\nProcess %d\n", i + 1);
+
+        printf("Enter Burst Time: ");
+        scanf("%d", &p[i].burstTime);
+
+        printf("Enter Deadline: ");
+        scanf("%d", &p[i].deadline);
+    }
+
+    // Sort by earliest deadline
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (p[i].deadline > p[j].deadline)
+            {
+                struct Process temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
+            }
+        }
+    }
+
+    printf("\nExecution Order (EDF):\n");
+
+    int time = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("P%d ", p[i].pid);
+        time += p[i].burstTime;
+    }
+
+    printf("\n\nProcess\tBurst Time\tDeadline\n");
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("P%d\t%d\t\t%d\n",
+               p[i].pid,
+               p[i].burstTime,
+               p[i].deadline);
+    }
+
+    return 0;
+}
