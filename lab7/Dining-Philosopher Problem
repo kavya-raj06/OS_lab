@@ -1,0 +1,93 @@
+#include <stdio.h>
+
+#define N 5
+
+int state[N];
+int semaphore[N] = {0};
+
+void test(int i)
+{
+    if (state[i] == 1 &&
+        state[(i + 4) % N] != 2 &&
+        state[(i + 1) % N] != 2)
+    {
+        state[i] = 2;
+        semaphore[i] = 1;
+
+        printf("Philosopher %d takes forks %d and %d and starts EATING\n",
+               i + 1, (i + 4) % N + 1, i + 1);
+    }
+}
+
+void take_fork(int i)
+{
+    state[i] = 1;
+
+    printf("Philosopher %d is HUNGRY\n", i + 1);
+
+    test(i);
+
+    if (semaphore[i] == 0)
+        printf("Philosopher %d waits\n", i + 1);
+}
+
+void put_fork(int i)
+{
+    state[i] = 0;
+
+    printf("Philosopher %d puts down forks and starts THINKING\n",
+           i + 1);
+
+    semaphore[i] = 0;
+
+    test((i + 4) % N);
+    test((i + 1) % N);
+}
+
+int main()
+{
+    int choice, phil;
+
+    for (int i = 0; i < N; i++)
+        state[i] = 0; // THINKING
+
+    while (1)
+    {
+        printf("\n1. Take Fork");
+        printf("\n2. Put Fork");
+        printf("\n3. Exit");
+        printf("\nEnter Choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            printf("Enter Philosopher Number (1-5): ");
+            scanf("%d", &phil);
+
+            if (phil >= 1 && phil <= 5)
+                take_fork(phil - 1);
+            else
+                printf("Invalid Philosopher Number\n");
+            break;
+
+        case 2:
+            printf("Enter Philosopher Number (1-5): ");
+            scanf("%d", &phil);
+
+            if (phil >= 1 && phil <= 5)
+                put_fork(phil - 1);
+            else
+                printf("Invalid Philosopher Number\n");
+            break;
+
+        case 3:
+            return 0;
+
+        default:
+            printf("Invalid Choice\n");
+        }
+    }
+
+    return 0;
+}
