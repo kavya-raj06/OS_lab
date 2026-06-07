@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+struct Process
+{
+    int pid;
+    int weight;
+};
+
+int main()
+{
+    int n;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    struct Process p[n];
+    int totalWeight = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        p[i].pid = i + 1;
+
+        printf("\nEnter weight for Process %d: ", i + 1);
+        scanf("%d", &p[i].weight);
+
+        totalWeight += p[i].weight;
+    }
+
+    printf("\nProcess\tWeight\tCPU Share(%%)\n");
+
+for (int i = 0; i < n; i++)
+{
+    float share =
+        ((float)p[i].weight / totalWeight) * 100;
+
+    printf("P%d\t%d\t%.2f%%\n",
+           p[i].pid,
+           p[i].weight,
+           share);
+}
+
+printf("\nGantt Chart:\n|");
+
+for (int i = 0; i < n; i++)
+{
+    printf(" P%d |", p[i].pid);
+}
+
+printf("\n0");
+
+int time = 0;
+
+for (int i = 0; i < n; i++)
+{
+    int allocated =
+        (p[i].weight * 100) / totalWeight;
+
+    time += allocated;
+    printf("   %d", time);
+}
+
+printf("\n");
+
+    return 0;
+}
